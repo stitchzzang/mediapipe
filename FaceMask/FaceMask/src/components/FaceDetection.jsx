@@ -1,9 +1,9 @@
 import React, { useRef, useEffect } from 'react';
-import { useFaceMesh } from '../hooks/useFaceMesh';
+import { useFaceDetection } from '../hooks/useFaceDetection';
 
 export const FaceDetection = ({ onFaceDetected }) => {
   const videoRef = useRef(null);
-  const { detectFace } = useFaceMesh();
+  const { model, error } = useFaceDetection();
 
   useEffect(() => {
     const setupCamera = async () => {
@@ -33,8 +33,8 @@ export const FaceDetection = ({ onFaceDetected }) => {
     let animationFrameId;
 
     const detectFaces = async () => {
-      if (videoRef.current && videoRef.current.readyState === 4) {
-        const predictions = await detectFace(videoRef.current);
+      if (videoRef.current && videoRef.current.readyState === 4 && model) {
+        const predictions = await model.estimateFaces({ input: videoRef.current });
         if (predictions?.length > 0) {
           onFaceDetected(predictions[0]);
         }
@@ -49,7 +49,11 @@ export const FaceDetection = ({ onFaceDetected }) => {
         cancelAnimationFrame(animationFrameId);
       }
     };
-  }, [detectFace, onFaceDetected]);
+  }, [model, onFaceDetected]);
+
+  if (error) {
+    return <div>Error loading model: {error}</div>;
+  }
 
   return (
     <video
