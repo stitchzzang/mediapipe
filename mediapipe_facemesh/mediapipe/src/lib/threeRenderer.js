@@ -19,7 +19,7 @@ export const initThreeScene = (canvas) => {
 
   let maskMesh;
   const textureLoader = new THREE.TextureLoader();
-  textureLoader.load('/src/assets/mask6.png', (texture) => {
+  textureLoader.load('/src/assets/mask3.png', (texture) => {
     // 초기 크기는 임의값; updateMask에서 조정됨.
     const geometry = new THREE.PlaneGeometry(200, 200);
     const material = new THREE.MeshBasicMaterial({ map: texture, transparent: true });
